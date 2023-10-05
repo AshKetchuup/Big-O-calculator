@@ -1,0 +1,15 @@
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.csproj.AssemblyReference.cache
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.GeneratedMSBuildEditorConfig.editorconfig
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.AssemblyInfoInputs.cache
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.AssemblyInfo.cs
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.csproj.CoreCompileInputs.cache
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\bin\Debug\net6.0\DjistkraShuntingYard.exe
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\bin\Debug\net6.0\DjistkraShuntingYard.deps.json
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\bin\Debug\net6.0\DjistkraShuntingYard.runtimeconfig.json
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\bin\Debug\net6.0\DjistkraShuntingYard.dll
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\bin\Debug\net6.0\DjistkraShuntingYard.pdb
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.dll
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\refint\DjistkraShuntingYard.dll
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.pdb
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\DjistkraShuntingYard.genruntimeconfig.cache
+\\strs\dfs\Devs\Data\17SAGASAs\AlevelCoding\NEA\DjistkraShuntingYard\DjistkraShuntingYard\obj\Debug\net6.0\ref\DjistkraShuntingYard.dll
