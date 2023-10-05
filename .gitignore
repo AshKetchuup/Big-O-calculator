@@ -1,0 +1,5 @@
+
+*.dll
+
+/BigO_new/BigO/bin
+/BigO_new/BigO/obj
