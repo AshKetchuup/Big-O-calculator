@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button Content="Click me" HorizontalAlignment="Left" Margin="120,304,0,0" VerticalAlignment="Top" Click="Button_Click" Width="64" Height="27"/>
-        <TextBox x:Name ="TimeComplexity" TextWrapping="Wrap" Text="Time Complexity:" Margin="468,318,116,59" RenderTransformOrigin="0.745,5.796" IsEnabled="True"/>
+        <TextBox x:Name ="TimeComplexity" TextWrapping="Wrap" Text="Time Complexity:" Margin="468,318,116,59" RenderTransformOrigin="0.745,5.796" IsEnabled="True" TextChanged="TimeComplexity_TextChanged"/>
         <Canvas x:Name="GraphArea" Margin="388,69,64,140" />
         <TextBlock HorizontalAlignment="Left" Margin="546,44,0,0" TextWrapping="Wrap" Text="Graph" VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353"/>
         <TextBox x:Name ="CodeInput"  AcceptsReturn="True"

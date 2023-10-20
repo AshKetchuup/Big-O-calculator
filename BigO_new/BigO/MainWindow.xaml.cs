@@ -62,6 +62,10 @@ namespace BigO
         {
 
         }
-       
+
+        private void TimeComplexity_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
