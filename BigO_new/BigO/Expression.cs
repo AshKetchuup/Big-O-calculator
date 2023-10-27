@@ -20,16 +20,23 @@ namespace BigO
         {
 i=i/2;            
         }
+
 int z = 0;
+
 while(z < n)
 {
 z+= 3
 }
 
 }
+
+for(int i =0;i<n; i*=2)
+{
+i++;
+}
 ";
 
-
+        Complexity Complexity { get; set; }
 
         Dictionary<string, string> oppositeOperation = new Dictionary<string, string>
         {
@@ -52,7 +59,6 @@ z+= 3
 
 
 
-        private List<string> dominanceHierarchy = new List<string>();
 
         private List<string> operationDominance = new List<string>
         {
@@ -68,22 +74,21 @@ z+= 3
         {
 
 
-            
-
-
             try
             {
+
                 //Objective Expression.1.2
                 //Check if the /= or *= iterators are not used when the intial is 0 
 
+
                 
-                if (initial == "0" && (FindOperation(iteration) == "*" | FindOperation(iteration) == "/") && (FindOperation(modification) == "*" | FindOperation(modification) == "/"| FindOperation(modification) == ""))
+                if (initial == "0" && (FindOperation(iteration) == "*" || FindOperation(iteration) == "/") && !(FindOperation(modification) == "+" || FindOperation(modification) == "-"))
                 {
                     throw new Exception("If you are multiplying or dividing 0 it will stay the same and hence an infinite loop.");
                 }
                 //check this for both the iteration and modification
                 // since iteration cannot be null
-                if (initial == "0" && (FindOperation(modification) == "*" | FindOperation(modification) == "/") && (FindOperation(iteration) == "*" | FindOperation(iteration) == "/" ))
+               else if (initial == "0" && (FindOperation(modification) == "*" || FindOperation(modification) == "/") && !(FindOperation(iteration) == "+" || FindOperation(iteration) == "-"))
                 {
                     throw new Exception("If you are multiplying or dividing 0 it will stay the same and hence an infinite loop.");
                 }
@@ -94,15 +99,16 @@ z+= 3
                 iteration = (modification != "") ? findHigherOperation(modification, iteration) : iteration;
 
 
-                MessageBox.Show(initial);
-                MessageBox.Show(condition);
-                MessageBox.Show(iteration);
+                //MessageBox.Show(initial);
+                //MessageBox.Show(condition);
+                //MessageBox.Show(iteration);
 
                 // Checks whether the loop conditions are correct and returns a bool
                 if (CheckLoopConditions(ref initial, ref condition, iteration))
                 {
 
-                    LoopToEquation(initial, condition, iteration);
+                Complexity comp =  LoopToEquation(initial, condition, iteration);
+                    comp.Display();
                 }
 
 
@@ -113,7 +119,7 @@ z+= 3
             }
 
             catch (Exception ex)
-            { 
+            {                
                 MessageBox.Show(ex.ToString());
             }
 
@@ -201,13 +207,18 @@ z+= 3
                 equation += repeatedOperation[FindOperation(iteration)] + "k";
             }
 
-            // remove the /1 bit used to rearrange the equation
 
-            MessageBox.Show($"{Rearrange(DjisktraShuntingYard(Tokenize(equation)))}");
+
+            //First tokenizes the equation that is created
+            //Then it converts the tokenized list into a postfixformat
+            // then rearranges it
                 return new Complexity($"{Rearrange(DjisktraShuntingYard(Tokenize(equation)))}");
         }
 
-
+        public  Complexity getComplexity()
+        {
+            return this.Complexity;
+        }
 
 
 
@@ -279,7 +290,7 @@ z+= 3
 
                 else if (tokenList.Count == 1)
                 {
-                    equation += "=k";
+                    //equation += "=k";
                     break;
                 }
                 else
@@ -295,6 +306,18 @@ z+= 3
                 tokenList.RemoveAt(0);
                 tokenList.RemoveAt((tokenList.Count - 1));
             }
+
+            //Removing the / or * 
+            if (equation.Contains("/"))
+                equation = equation.Remove(equation.IndexOf("/"));
+
+            else if (equation.Contains("*"))
+                equation = equation.Remove(equation.IndexOf("*"));
+
+            else if (equation.Contains("log"))
+                equation += ")"; //add the remaining bracket that was removed
+
+
 
             return equation;    
         }

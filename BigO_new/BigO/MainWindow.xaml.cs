@@ -63,6 +63,13 @@ namespace BigO
 
         }
 
+
+        public void DisplayComplexity(string str)
+        {
+            complexity.Text = str;
+
+        }
+
         private void TimeComplexity_TextChanged(object sender, TextChangedEventArgs e)
         {
 

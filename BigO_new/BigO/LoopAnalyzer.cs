@@ -27,15 +27,17 @@ namespace BigO
            
 
             // Analyze the syntax tree
+
+            //Inbuilt 
             Visit(root);
            
 
         }
 
 
-        public override void VisitForStatement(ForStatementSyntax node)
+        public override Expression VisitForStatement(ForStatementSyntax node)
         {
-
+            // detect i++ !
 
             // Extract the initialized statement, condition, and iterator
             VariableDeclarationSyntax initialization = node.Declaration;
@@ -59,27 +61,54 @@ namespace BigO
             }
 
 
-            Expression expression = new Expression(initialization.Variables.First()
+            return new Expression(initialization.Variables.First()
         .Initializer?.Value?.ToString(), condition.ToString(), iterator.ToString(), modification);
 
 
-
-            base.VisitForStatement(node);
 
         }
 
         /// <summary>
         ///  take into account propagation of timecomplexity 
         /// </summary>
-        public void DepthFirstSearch(CSharpSyntaxNode node)
+        public Complexity DepthFirstTraversal(CSharpSyntaxNode node)
         {
-            
 
+
+
+
+            foreach(CSharpSyntaxNode child in node.ChildNodes())
+            {
+                
+               List<Complexity> complexityList = new List<Complexity>();
+                switch (child)
+                {
+                    case WhileStatementSyntax whileLoop:
+                        Complexity complexity = VisitWhileStatement(child).getComplexity();
+                        DepthFirstSearch(child);
+                        break;
+
+                    case ForStatementSyntax forLoop:
+                       Complexity complexity1 = VisitForStatement(forLoop);
+                        
+                        break;
+
+                    case ForEachStatementSyntax foreachLoop:
+                        
+                        break;
+
+
+                }
+
+            }
+
+            return new Complexity("1");
 
 
         }
 
-        public override void VisitWhileStatement(WhileStatementSyntax node)
+
+        public override Expression VisitWhileStatement(WhileStatementSyntax node)
         {
 
             // Extract the initialized statement, condition, and iterator
@@ -166,7 +195,8 @@ namespace BigO
 
            
             Expression expression = new Expression(initialization.ToString(), condition.ToString(), modification.ToString());
-            base.VisitWhileStatement(node);
+            return expression;
+            //base.VisitWhileStatement(node);
         }
 
        

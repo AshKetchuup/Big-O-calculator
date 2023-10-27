@@ -7,12 +7,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Click me" HorizontalAlignment="Left" Margin="120,304,0,0" VerticalAlignment="Top" Click="Button_Click" Width="64" Height="27"/>
-        <TextBox x:Name ="TimeComplexity" TextWrapping="Wrap" Text="Time Complexity:" Margin="468,318,116,59" RenderTransformOrigin="0.745,5.796" IsEnabled="True" TextChanged="TimeComplexity_TextChanged"/>
-        <Canvas x:Name="GraphArea" Margin="388,69,64,140" />
-        <TextBlock HorizontalAlignment="Left" Margin="546,44,0,0" TextWrapping="Wrap" Text="Graph" VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="93*"/>
+            <ColumnDefinition Width="707*"/>
+        </Grid.ColumnDefinitions>
+        <Button Content="Click me" HorizontalAlignment="Left" Margin="54,291,0,0" VerticalAlignment="Top" Click="Button_Click" Width="64" Height="27" Grid.Column="1"/>
+        <TextBlock Text="Time Complexity" HorizontalAlignment="Left" Margin="425,297,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="1"/>
+        <TextBox x:Name ="complexity" TextWrapping="Wrap" Margin="361,318,130,59" RenderTransformOrigin="0.745,5.796" IsEnabled="False" TextChanged="TimeComplexity_TextChanged" Grid.Column="1" FontSize="14"/>
+        <Canvas x:Name="GraphArea" Margin="295,69,64,140" Grid.Column="1" />
+        <TextBlock HorizontalAlignment="Left" Margin="453,48,0,0" TextWrapping="Wrap" Text="Graph" VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="1"/>
         <TextBox x:Name ="CodeInput"  AcceptsReturn="True"
-                 HorizontalAlignment="Left" Height="210" Margin="48,52,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="262"/>
+                 HorizontalAlignment="Left" Height="210" Margin="59,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="262" Grid.ColumnSpan="2" FontSize="14"/>
+        <TextBlock Text="Enter C# Code here" HorizontalAlignment="Left" Margin="42,48,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="1"/>
 
 
 
