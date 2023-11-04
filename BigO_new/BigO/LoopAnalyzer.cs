@@ -11,104 +11,174 @@ namespace BigO
 {
 
 
-    class LoopAnalyzer : CSharpSyntaxWalker
+     class LoopAnalyzer 
     {
         //https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp?view=roslyn-dotnet-4.6.0
         CompilationUnitSyntax root;
         SyntaxTree syntaxTree;
         public void AnalyzeCode(string code)
         {
+            
 
+            // Convert it into a syntax tree
+            syntaxTree = CSharpSyntaxTree.ParseText(code);
+            //Then get the compilation root (or the root node) 
+            root = syntaxTree.GetCompilationUnitRoot();
 
-            // Parse the code into a syntax tree
-             syntaxTree = CSharpSyntaxTree.ParseText(code);
-             root = syntaxTree.GetCompilationUnitRoot();
+            //Before embarking on building my own traveral algorithm I used the inbuilt Visit(); function  
 
-           
-
-            // Analyze the syntax tree
-
-            //Inbuilt 
-            Visit(root);
+            PostOrderTraversal(root).Display();
            
 
         }
 
+        public Complexity PostOrderTraversal(CSharpSyntaxNode node)
+        {
+            if (node == null)
+                return new Complexity("");
 
-        public override Expression VisitForStatement(ForStatementSyntax node)
+
+            List<Complexity> list = new List<Complexity>();
+            if (node.ChildNodes().Any())
+            {
+                foreach (CSharpSyntaxNode child in node.ChildNodes())
+                {
+                    list.Add(PostOrderTraversal(child));
+                }
+            }
+
+
+            // if something is returned
+            if (returnComp(node).getComplexity() != "")
+            {
+                if (returnComp(node).AddComplexities(list).getComplexity() != "")
+                    return new Complexity(returnComp(node).AddComplexities(list).getComplexity() + "*" + returnComp(node).getComplexity());
+
+                else
+                    return new Complexity(returnComp(node).getComplexity());
+
+            }
+
+            //if nothing is returned at all
+            if (returnComp(node).getComplexity() == "")
+            {
+                if (returnComp(node).AddComplexities(list).getComplexity() != "")
+                    return new Complexity(returnComp(node).AddComplexities(list).getComplexity());
+
+                else
+                    return new Complexity("");
+            }
+
+            else
+            {
+                return new Complexity("1");
+            }
+
+
+        }
+  
+
+       
+        
+        private Complexity returnComp(CSharpSyntaxNode node)
+        {  
+            switch (node)
+            {
+                case WhileStatementSyntax whileLoop:
+                    return (VisitWhileStatement(whileLoop).getComplexity());
+                  
+
+                case ForStatementSyntax forLoop:
+              
+                   
+                    return (VisitForStatement(forLoop).getComplexity());
+
+
+                case ForEachStatementSyntax foreachLoop:
+                return(new Complexity("n"));
+            
+
+                // Handle other node types as needed
+                default:
+                    return(new Complexity(""));
+                 
+            }
+
+        }
+      public new Expression VisitForStatement(ForStatementSyntax node)
         {
             // detect i++ !
 
             // Extract the initialized statement, condition, and iterator
-            VariableDeclarationSyntax initialization = node.Declaration;
+            string initialization = "";
             ExpressionSyntax condition = node.Condition;
             SeparatedSyntaxList<ExpressionSyntax> iterator = node.Incrementors;
             string modification = "";
+            IdentifierNameSyntax loopVariable = null;
 
 
-            var loopVariable = initialization.Variables.First();
+            if (node.Condition is BinaryExpressionSyntax binaryCondition)
+            {
+                // Check if the left side of the binary condition is an identifier
+                if (binaryCondition.Left is IdentifierNameSyntax leftIdentifier)
+                {
+                    loopVariable = leftIdentifier;
+                }
+                // Check if the right side of the binary condition is an identifier
+                else if (binaryCondition.Right is IdentifierNameSyntax rightIdentifier)
+                {
+                    loopVariable = rightIdentifier;
+                }
+            }
+            
+
+
+
+
+            //Traverses the node's previous nodes and finds whether there is an initalization in there
+            // Traverse the previous nodes to find the initialization
+            // Extract the loop variable name from the condition
+
+
+            foreach (var node2 in root.DescendantNodes())
+            {
+                if (node2 is LocalDeclarationStatementSyntax localDeclaration)
+                {
+                    foreach (var variable in localDeclaration.Declaration.Variables)
+                    {
+                        // Check if the variable is explicitly initialized and matches the loopVariable's identifier
+                        if (variable.Initializer != null && variable.Identifier.Text == loopVariable.Identifier.Text)
+                        {
+
+                            string localDec = localDeclaration.ToString().Replace(";", "");
+                            initialization = localDec.Substring(localDec.IndexOf("=") + 1);
+
+                            break; // Exit the loop
+                        }
+                    }
+                }
+            }
 
             foreach (StatementSyntax statement in node.Statement.DescendantNodes().OfType<StatementSyntax>())
-            {
-                if (statement is ExpressionStatementSyntax expressionStatement &&
-                expressionStatement.Expression is AssignmentExpressionSyntax assignmentExpression &&
-                assignmentExpression.Left is IdentifierNameSyntax identifierName &&
-                identifierName.Identifier.ValueText == loopVariable.Identifier.ValueText)
                 {
-                    modification
-                         = assignmentExpression.ToString();
+                    if (statement is ExpressionStatementSyntax expressionStatement &&
+                    expressionStatement.Expression is AssignmentExpressionSyntax assignmentExpression &&
+                    assignmentExpression.Left is IdentifierNameSyntax identifierName &&
+                    identifierName.Identifier.ValueText == loopVariable.Identifier.ValueText)
+                    {
+                        modification
+                             = assignmentExpression.ToString();
+                    }
                 }
-            }
+            
 
-
-            return new Expression(initialization.Variables.First()
-        .Initializer?.Value?.ToString(), condition.ToString(), iterator.ToString(), modification);
+            return new Expression(initialization, condition.ToString(), iterator.ToString(), modification);
 
 
 
         }
 
-        /// <summary>
-        ///  take into account propagation of timecomplexity 
-        /// </summary>
-        public Complexity DepthFirstTraversal(CSharpSyntaxNode node)
-        {
-
-
-
-
-            foreach(CSharpSyntaxNode child in node.ChildNodes())
-            {
-                
-               List<Complexity> complexityList = new List<Complexity>();
-                switch (child)
-                {
-                    case WhileStatementSyntax whileLoop:
-                        Complexity complexity = VisitWhileStatement(child).getComplexity();
-                        DepthFirstSearch(child);
-                        break;
-
-                    case ForStatementSyntax forLoop:
-                       Complexity complexity1 = VisitForStatement(forLoop);
-                        
-                        break;
-
-                    case ForEachStatementSyntax foreachLoop:
-                        
-                        break;
-
-
-                }
-
-            }
-
-            return new Complexity("1");
-
-
-        }
-
-
-        public override Expression VisitWhileStatement(WhileStatementSyntax node)
+        public new Expression VisitWhileStatement(WhileStatementSyntax node)
         {
 
             // Extract the initialized statement, condition, and iterator
@@ -138,7 +208,6 @@ namespace BigO
             //Traverses the node's previous nodes and finds whether there is an initalization in there
             // Traverse the previous nodes to find the initialization
             // Extract the loop variable name from the condition
-
 
             foreach (var node2 in root.DescendantNodes())
             {

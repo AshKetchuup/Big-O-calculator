@@ -5,31 +5,63 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 
 namespace BigO
 {
-     class Complexity
+    class Complexity
     {
-        private string complexity;
-            
-        public Complexity(string complexity,string timetype = "")
+         string complexity { get; set; }
+
+        public Complexity(string complexity, string timetype = "")
         {
             this.complexity = complexity;
         }
 
-
-        private Complexity AddComplexities()
+        public string getComplexity()
         {
-            return null;
+            return this.complexity;
+        }
+  
+
+        public Complexity AddComplexities(List<Complexity> complexity)
+        {
+            string complex = "";
+
+
+            for (int i = 0; i < complexity.Count; i++)
+            {
+
+                if (complexity[i].complexity != "" )
+                {
+                   complex += complexity[i].complexity;
+                    if (i != complexity.Count - 1 && complexity[i + 1].complexity != "")
+                        complex += "+";
+                }
+              
+            }
+
+           if(complex != "" && complex.Contains("+"))
+                return new Complexity($"({complex})");
+            else
+                return new Complexity($"{complex}");
+
         }
 
 
-        private Complexity ReturnHigherOrderComplexity()
+        private Complexity ReturnHigherOrderComplexity(List<Complexity> complexities)
         {
 
 
             // if the same type
-            return null;
+            if (complexities.Distinct().Skip(1).Any())
+                return complexities[0];
+
+            else
+            {
+
+                return null;
+            }
 
         }
 

@@ -39,22 +39,37 @@ namespace BigO
                 analyzer.AnalyzeCode(code);
             }
 
-            else
-            {
-                MessageBox.Show("Please enter valid Code");
-            }
         }
 
         private bool CheckCodeValidity(string code)
         {
+            //Converting the code into syntaxtree
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
-         
-            // Gets the root of the syntax tree.
-            SyntaxNode root = syntaxTree.GetRoot();
 
+            // It gets the syntax tree's diagnostics
+            var diagnostics = syntaxTree.GetDiagnostics();
 
-            return root is CompilationUnitSyntax;
+            // Check if there are any syntax errors
+            string mistakes = "";
+            foreach (var diagnostic in diagnostics)
+            {
+                if (diagnostic.Severity == DiagnosticSeverity.Error)
+                {
+                   mistakes += diagnostic.GetMessage().ToString()+ Environment.NewLine;
+                    
+                    
+                }
+            }
 
+            if(mistakes.Length> 0) 
+            {
+                MessageBox.Show(mistakes);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
 

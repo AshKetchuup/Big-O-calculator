@@ -16,6 +16,8 @@ namespace BigO
         string code = @"
     void MyMethod()
     {
+ for (int i = 1; i < n; i++)
+        {}
         for (int i = 1; i < n; i++)
         {
 i=i/2;            
@@ -36,7 +38,7 @@ i++;
 }
 ";
 
-        Complexity Complexity { get; set; }
+        Complexity theActualComplexity { get; set; }
 
         Dictionary<string, string> oppositeOperation = new Dictionary<string, string>
         {
@@ -47,6 +49,7 @@ i++;
             { "/", "*" },
             { "^", "log" } // You can add other operators as needed
         };
+        
         Dictionary<string, string> repeatedOperation = new Dictionary<string, string>
         {
             { "+", "*" },
@@ -99,16 +102,14 @@ i++;
                 iteration = (modification != "") ? findHigherOperation(modification, iteration) : iteration;
 
 
-                //MessageBox.Show(initial);
-                //MessageBox.Show(condition);
-                //MessageBox.Show(iteration);
+                
 
                 // Checks whether the loop conditions are correct and returns a bool
                 if (CheckLoopConditions(ref initial, ref condition, iteration))
                 {
 
-                Complexity comp =  LoopToEquation(initial, condition, iteration);
-                    comp.Display();
+              theActualComplexity =  LoopToEquation(initial, condition, iteration);
+                    //comp.Display();
                 }
 
 
@@ -215,14 +216,6 @@ i++;
                 return new Complexity($"{Rearrange(DjisktraShuntingYard(Tokenize(equation)))}");
         }
 
-        public  Complexity getComplexity()
-        {
-            return this.Complexity;
-        }
-
-
-
-
         /// <summary>
         /// Helper Functions
         /// </summary>
@@ -311,10 +304,10 @@ i++;
             if (equation.Contains("/"))
                 equation = equation.Remove(equation.IndexOf("/"));
 
-            else if (equation.Contains("*"))
+             if (equation.Contains("*"))
                 equation = equation.Remove(equation.IndexOf("*"));
 
-            else if (equation.Contains("log"))
+             if (equation.Contains("log"))
                 equation += ")"; //add the remaining bracket that was removed
 
 
@@ -387,6 +380,15 @@ i++;
             Regex regex = new Regex(pattern);
             Match match = regex.Match(op);
             return match.Success ? match.Value : "";
+        }
+
+
+
+
+        //Functions for additional design.
+        public Complexity getComplexity()
+        {
+            return this.theActualComplexity;
         }
 
 
