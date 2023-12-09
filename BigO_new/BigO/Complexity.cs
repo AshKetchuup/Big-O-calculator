@@ -9,22 +9,72 @@ using System.Windows.Documents;
 
 namespace BigO
 {
+   internal enum TimeType {Poly, Log, LinearArithmetic, Constant, Composite }
     class Complexity
     {
-         string complexity { get; set; }
 
-        public Complexity(string complexity, string timetype = "")
+      
+        internal TimeType time { get; set; }
+        internal string complexity { get; set; }
+      
+        internal Complexity(string complexity)
         {
             this.complexity = complexity;
+            this.time = findType(complexity);
         }
 
-        public string getComplexity()
+        //not fully implemtned
+        private TimeType findType(string complexity)
         {
-            return this.complexity;
-        }
-  
+            
+            List<string> comp = Expression.Tokenize(complexity);
 
-        public Complexity AddComplexities(List<Complexity> complexity)
+            if (complexity.Contains("log") && comp.Count(x=> x.Contains("n"))> 1)
+                return TimeType.LinearArithmetic;
+
+
+            if (complexity.Contains("log"))
+            {
+                return TimeType.Log;
+            }
+            if (complexity.Contains("n"))
+            {
+                return TimeType.Poly;
+            }
+               return TimeType.Constant;
+        }
+
+        internal List<string> Display()
+        {
+            string temp = "";
+            if (complexity.Contains("*")) // to avoid the null reference exception 
+            {
+
+                temp = complexity;                
+                Expression expression = new Expression(complexity);
+                complexity =
+                   ConvertToSuperscript(
+                    expression.theActualComplexity.complexity);
+            }
+
+
+            if (complexity != "") // exception 
+            {
+               
+                MessageBox.Show($"O({complexity})");          
+            }
+            else
+            {
+                MessageBox.Show($"O(1)");
+            }
+
+            return new List<string> { temp + "=" + complexity, $"O({complexity})" };
+            
+        }
+
+
+        // function for adding the complexities ( will be replaced)
+        internal Complexity AddComplexities(List<Complexity> complexity)
         {
             string complex = "";
 
@@ -32,48 +82,57 @@ namespace BigO
             for (int i = 0; i < complexity.Count; i++)
             {
 
-                if (complexity[i].complexity != "" )
+                if (complexity[i].complexity != "")
                 {
-                   complex += complexity[i].complexity;
+                    complex += complexity[i].complexity;
                     if (i != complexity.Count - 1 && complexity[i + 1].complexity != "")
                         complex += "+";
                 }
-              
+
             }
 
-           if(complex != "" && complex.Contains("+"))
+            if (complex != "" && complex.Contains("+") && complex[0] != '(')
                 return new Complexity($"({complex})");
             else
                 return new Complexity($"{complex}");
 
         }
 
-
-        private Complexity ReturnHigherOrderComplexity(List<Complexity> complexities)
+        private string ConvertToSuperscript(string input)
         {
+            var superscripts = new Dictionary<char, char>
+   {
+       {'0', '⁰'},
+       {'1', '¹'},
+       {'2', '²'},
+       {'3', '³'},
+       {'4', '⁴'},
+       {'5', '⁵'},
+       {'6', '⁶'},
+       {'7', '⁷'},
+       {'8', '⁸'},
+       {'9', '⁹'}
+      
+   };
 
+            var result = new StringBuilder();
 
-            // if the same type
-            if (complexities.Distinct().Skip(1).Any())
-                return complexities[0];
-
-            else
+            foreach (var c in input)
             {
-
-                return null;
+                if (superscripts.TryGetValue(c, out var superscript) && c != '1')
+                {
+                    result.Append(superscript);
+                }
+                else if(c != '^')
+                {
+                    result.Append(c);
+                }
             }
 
+            return result.ToString();
         }
 
-        public void Display()
-        {
-            MessageBox.Show($"O({complexity})");
-        }
-
-        private Complexity MultiplyComplexity()
-        {
-            return null;
-        }
+     
 
     }
 }
