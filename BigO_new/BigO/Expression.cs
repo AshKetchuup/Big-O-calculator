@@ -43,6 +43,8 @@ for (int i = 1; i < n; i*=2)
 }
 ";
         internal Complexity theActualComplexity { get; set; }
+        internal string errorMessage { get; set; }
+
 
        private Dictionary<string, string> oppositeOperation = new Dictionary<string, string>
         {
@@ -101,6 +103,22 @@ for (int i = 1; i < n; i*=2)
 
                 }
 
+                //checks whether it is a 0/ an infinite loop
+                else
+                {
+                    if (initial == "0" && (FindOperation(iteration) == "*" || FindOperation(iteration) == "/") )
+                    {
+                        throw new Exception("If you are multiplying or dividing 0 it will stay the same and hence an infinite loop.");
+                    }
+                    //check this for both the iteration and modification
+                    // since iteration cannot be null
+                    else if (initial == "0" && !(FindOperation(iteration) == "+" || FindOperation(iteration) == "-"))
+                    {
+                        throw new Exception("If you are multiplying or dividing 0 it will stay the same and hence an infinite loop.");
+                    }
+
+
+                }
 
 
                 // finds the more dominant operation between the modification and the iteration
@@ -117,13 +135,16 @@ for (int i = 1; i < n; i*=2)
 
                 else
                 {
+                   
                     throw new ArgumentException("Your loop conditions are not right");
                 }
             }
 
             catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 MessageBox.Show(ex.ToString());
+             
             }
 
 
@@ -210,10 +231,10 @@ for (int i = 1; i < n; i*=2)
                  */
                 if (int.TryParse(condition, out int result) && int.TryParse(initial.Substring(initial.IndexOf("=") + 1), out int start))
                 {
-                    if (iteration == "-" || iteration == "/" && start <= result)
+                    if ((iteration == "-" || iteration == "/") && start <= result)
                         return false;
                     
-                    if (iteration == "*" || iteration == "+" && start >= result)
+                    if ((iteration == "*" || iteration == "+") && start >= result)
                         return false;
                     
                 }
@@ -533,29 +554,38 @@ for (int i = 1; i < n; i*=2)
                     && a.complexity.Contains("n") && b.complexity.Contains("n")) // check if they have the same variable 
 
                 {
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Substring(b.complexity.IndexOf("^") + 1)) : 1;
-
-                    return $"n^{powerA + powerB}";
+                    int[] array = AddPowers(a, b);                
+                    return $"n^{array[0] + array[1]}";
                 }
 
                 //for logarthmic time compleixty
                 if(a.time == TimeType.Log)
-                {                    
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Split(new char[] { '^' })[1]) : 1; // this gives the power of A
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Split(new char[] { '^' })?[1]) : 1;
-                    return $"log(n)^{powerB + powerA}";
+                {
+                    int[] array = AddPowers(a, b);
+                    return $"log(n)^{array[0] + array[1]}";
+                }
+                if(a.time == TimeType.Constant)
+                {
+                    return "1";
                 }
             }
 
             else
             {
+                if(a.time == TimeType.Constant )
+                {
+                    return b.complexity;
+                }
+
+                else if(b.time == TimeType.Constant )
+                {
+                    return a.complexity;
+                }    
 
                 if(a.time == TimeType.LinearArithmetic && b.time==TimeType.Poly || b.time == TimeType.LinearArithmetic && a.time == TimeType.Poly)
                 {
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Substring(b.complexity.IndexOf("^") + 1)) : 1;
-                    return $"n^{powerA + powerB}log(n)";
+                    int[] array = AddPowers(a, b);
+                    return $"n^{array[0] + array[1]}log(n)";
                 }
            
                 if (a.time == TimeType.Poly && b.time == TimeType.Log || b.time == TimeType.Poly && a.time == TimeType.Log)
@@ -572,6 +602,9 @@ for (int i = 1; i < n; i*=2)
                     int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
                     int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Split(new char[] { '^' })[1]) : 1;
                     return $"n^{powerA}log(n)^{powerB + 1}";
+                    //int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
+                    //int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Split(new char[] { '^' })[1]) : 1;
+                    //return $"n^{powerA}log(n)^{powerB + 1}";
                 }
             }
 
@@ -592,19 +625,26 @@ for (int i = 1; i < n; i*=2)
                 if (a.time == TimeType.Poly // if they are polynomial time complexity and if they both contain the same letter variable they depend upon
                       && a.complexity.Contains("n") && b.complexity.Contains("n")) // check if they have the same variable 
                 {
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Substring(b.complexity.IndexOf("^") + 1)) : 1;
-                    return powerA > powerB ? a.complexity : b.complexity;
+                    int[] array = AddPowers(a, b);
+                    return array[0] > array[1] ? a.complexity : b.complexity;
                 }
 
-                if (a.time == TimeType.Log)
+              else  if (a.time == TimeType.Log)
                 {                                    
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Split(new char[] { '^' })[1]) : 1; // this gives the power of A
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Split(new char[] { '^' })[1]) : 1;
-                    return powerA > powerB ? a.complexity : b.complexity;
+                    int[] array = AddPowers(a, b);
+                    return array[0] > array[1] ? a.complexity : b.complexity;
                 }
 
+                else if (a.time == TimeType.LinearArithmetic)
+                {
+                    int[] array = AddPowers(a, b);
+                    return array[0] > array[1] ? a.complexity : b.complexity;
+                }
 
+            else if(a.time == TimeType.Constant)
+                {
+                    return a.complexity;
+                }
             }
 
             else
@@ -619,46 +659,52 @@ for (int i = 1; i < n; i*=2)
             
                  if(a.time == TimeType.LinearArithmetic && b.time == TimeType.Poly)
                 {
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Substring(b.complexity.IndexOf("^") + 1)) : 1;               
-                   string aString = Regex.Split(a.complexity, "^")[1]; // splits each part of the complexity string
-                    aString = aString.Remove(aString.IndexOf("log")); // removes part where it contains log
-                         int powerA = a.complexity.Contains("^") ? int.Parse(aString) : 1; // this gives the power of A
-                    return powerA > powerB ? a.complexity : b.complexity;
+                  
+                   return AddPowersLog(a, b);
+
                 }
                 if (b.time == TimeType.LinearArithmetic && a.time == TimeType.Poly)
                 {
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
-                    string bString = Regex.Split(b.complexity, "^")[1];
-                    bString = bString.Remove(bString.IndexOf("log"));
-                    int powerB = b.complexity.Contains("^") ? int.Parse(bString) : 1;
-                    return powerA > powerB ? a.complexity : b.complexity;
+                    return AddPowersLog(b, a);
                 }
 
                 if (a.time == TimeType.LinearArithmetic && b.time == TimeType.Log)
                 {
-                    int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Substring(a.complexity.IndexOf("^") + 1)) : 1;
-                    string bString = Regex.Split(b.complexity, "^")[1];
-                    bString = bString.Remove(bString.IndexOf("log"));
-                    int powerB = b.complexity.Contains("^") ? int.Parse(bString) : 1;
-                    return powerA > powerB || powerA == powerB ? a.complexity : b.complexity;
+                    return AddPowersLog(b, a);
+
 
                 }
                 if (b.time == TimeType.LinearArithmetic &&  a.time == TimeType.Log)
                 {
-                    int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Substring(b.complexity.IndexOf("^") + 1)) : 1;
-                    string aString = Regex.Split(a.complexity, "^")[1]; // splits each part of the complexity string
-                    aString = aString.Remove(aString.IndexOf("log")); // removes part where it contains log
-                    int powerA = a.complexity.Contains("^") ? int.Parse(aString) : 1; // this gives the power of A
-
-                    return powerA > powerB || powerA == powerB ? a.complexity : b.complexity;
+                    return AddPowersLog(a, b);
                 }
 
             }
 
             return "";
 
-
         }
+
+        private int[] AddPowers(Complexity a, Complexity b)
+        {
+            int powerA = a.complexity.Contains("^") ? int.Parse(a.complexity.Split(new char[] { '^' })[1]) : 1; // this gives the power of A
+            int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Split(new char[] { '^' })[1]) : 1;
+
+            return new int[] { powerA, powerB };
+        }
+        
+        // a should be of time type Log
+        private string AddPowersLog(Complexity a, Complexity b)
+        {
+            int powerB = b.complexity.Contains("^") ? int.Parse(b.complexity.Substring(b.complexity.IndexOf("^") + 1)) : 1;
+            string aString = Regex.Split(a.complexity, "^")[1]; // splits each part of the complexity string
+            aString = aString.Remove(aString.IndexOf("log")); // removes part where it contains log
+            int powerA = a.complexity.Contains("^") ? int.Parse(aString) : 1; // this gives the power of A
+            return powerA > powerB ? a.complexity : b.complexity;
+        }
+
+
+
 
     }
 }

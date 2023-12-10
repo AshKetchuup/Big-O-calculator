@@ -1,29 +1,38 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.VisualBasic;
+
 namespace BigO
 {
     class LoopAnalyzer
     {
         //https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp?view=roslyn-dotnet-4.6.0
         // this website was used to get coding resources for rosyln csharp syntax 
+      
+        
         // this is the first syntax node
         private CompilationUnitSyntax root;
         private SyntaxTree syntaxTree; // this is a global variable so that it can be accessed from the whole class
+        private string errorMessage = "";
 
-
-        // interanal because it should only be accessible by members inside a DLL
+        // internal because it should only be accessible by members inside a DLL
         internal List<string> AnalyzeCode(string code)
         {
             // Convert it into a syntax tree
             syntaxTree = CSharpSyntaxTree.ParseText(code);
             //Then get the compilation root (or the root node) 
             root = syntaxTree.GetCompilationUnitRoot();
-            //Before embarking on building my own traveral algorithm I used the inbuilt Visit(); function  
-            return PostOrderTraversal(root).Display();
+            //Before embarking on building my own traveral algorithm I used the inbuilt Visit(); function    
+           Complexity finalComplexity = PostOrderTraversal(root);
+            return errorMessage != "" ? new List<string> { errorMessage, "" } : finalComplexity.Display(); 
+
+
         }
 
         private Complexity PostOrderTraversal(CSharpSyntaxNode node)
@@ -41,25 +50,28 @@ namespace BigO
                 }
             }
 
-
+            // removes unecessary calls and objects being created
             list.RemoveAll(comp => comp.complexity == "");
-            
+
+            Complexity returnValue = returnComp(node);
+
+
             // if something is returned
-            if (returnComp(node)?.complexity != "")
+            if (returnValue?.complexity != "" && returnValue!= null)
             {
-                if (returnComp(node).AddComplexities(list).complexity != "")
+                if (returnValue.AddComplexities(list).complexity != "")
                     // adds multiplier between this nodes complexity and the dominant one
-                    return new Complexity(returnComp(node).AddComplexities(list).complexity + "*" + returnComp(node).complexity);
+                    return new Complexity(returnValue.AddComplexities(list).complexity + "*" + returnValue.complexity);
 
                 else
-                    return new Complexity(returnComp(node).complexity);
+                    return new Complexity(returnValue.complexity);
             }
 
             //if nothing is returned at all
-            if (returnComp(node)?.complexity == "")
+            if (returnValue?.complexity == "")
             {
-                if (returnComp(node).AddComplexities(list).complexity != "")
-                    return new Complexity(returnComp(node).AddComplexities(list).complexity);
+                if (returnValue.AddComplexities(list).complexity != "")
+                    return new Complexity(returnValue.AddComplexities(list).complexity);
 
                 else
                     return new Complexity("");
@@ -76,11 +88,19 @@ namespace BigO
             switch (node)
             {
                 case WhileStatementSyntax whileLoop:
-                    return (VisitWhileStatement(whileLoop).theActualComplexity);
+                    Expression expresion = VisitWhileStatement(whileLoop);           
+                    // assigns expression's error message to the local error message
+                    if(expresion.errorMessage != null) errorMessage=  expresion.errorMessage ;                  
+                    return VisitWhileStatement(whileLoop).theActualComplexity;
 
 
                 case ForStatementSyntax forLoop:
-                    return (VisitForStatement(forLoop).theActualComplexity);
+                    Expression expresion2 = VisitForStatement(forLoop);
+                    // assigns expression's error message to the local error message
+                    if (expresion2.errorMessage != null) 
+                        errorMessage = expresion2.errorMessage;
+                    
+                    return VisitForStatement(forLoop).theActualComplexity; 
 
 
                 case ForEachStatementSyntax foreachLoop:
@@ -98,8 +118,10 @@ namespace BigO
         {
 
 
+
             // Extract the initialized statement, condition, and iterator
-            string initialization = "";
+            string init = node.Declaration.ToString();
+            string initialization = init.Substring(init.IndexOf("=") + 1);
             ExpressionSyntax condition = node.Condition;
             SeparatedSyntaxList<ExpressionSyntax> iterator = node.Incrementors;
             string modification = "";
@@ -129,7 +151,7 @@ namespace BigO
                     foreach (var variable in localDeclaration.Declaration.Variables)
                     {
                         // Check if the variable is explicitly initialized and matches the loopVariable's identifier
-                        if (variable.Initializer != null && variable.Identifier.Text == loopVariable.Identifier.Text)
+                        if (variable.Initializer != null && variable.Identifier.Text == loopVariable.Identifier.Text && initialization == "")
                         {
 
                             string localDec = localDeclaration.ToString().Replace(";", "");
@@ -165,7 +187,10 @@ namespace BigO
 
                 }
             }
-            return new Expression(initialization == "" ? node.Declaration.ToString() : initialization, condition.ToString(), iterator.ToString(), modification);
+
+           
+           Expression expression = new Expression(initialization, condition.ToString(), iterator.ToString(), modification);
+            return expression;
         }
 
 
@@ -259,13 +284,15 @@ namespace BigO
         }
 
 
-        public Expression VisitReturnStatement(ReturnStatementSyntax node)
+
+        internal Expression VisitReturnStatement(ReturnStatementSyntax node)
         {
 
             return null;
 
         }
 
+       
 
     }
 }

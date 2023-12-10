@@ -61,6 +61,7 @@ namespace BigO
             if(mistakes.Length> 0) 
             {
                 Description = mistakes;
+                Complexity = "";
                 return false;
             }
             else

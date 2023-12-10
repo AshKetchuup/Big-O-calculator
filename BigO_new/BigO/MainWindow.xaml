@@ -8,7 +8,9 @@
         Title="Big O calculator" Height="450" Width="800" ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="62*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="52*"/>
             <ColumnDefinition Width="31.96"/>
             <ColumnDefinition Width="317*"/>
             <ColumnDefinition Width="19*"/>
@@ -16,12 +18,12 @@
             <ColumnDefinition Width="163*"/>
             <ColumnDefinition Width="164*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Click me" HorizontalAlignment="Left" Margin="54,291,0,0" VerticalAlignment="Top" Click="Button_Click" Width="64" Height="27" Grid.Column="2"/>
-        <TextBlock Text="Time Complexity" HorizontalAlignment="Left" Margin="45,297,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="5"/>
-        <TextBox x:Name ="timeComplexity" TextWrapping="Wrap" Margin="25,318,130,59" RenderTransformOrigin="0.745,5.796" IsEnabled="False" TextChanged="TimeComplexity_TextChanged" Grid.Column="4" FontSize="14" Grid.ColumnSpan="3"/>
-        <TextBlock HorizontalAlignment="Left" Margin="73,48,0,0" TextWrapping="Wrap" Text="Description" VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="5"/>
-        <TextBox x:Name ="CodeInput"  AcceptsReturn="True" HorizontalAlignment="Left" Height="210" Margin="59,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="262" Grid.ColumnSpan="3" FontSize="14"/>
-        <TextBlock Text="Enter C# Code here" HorizontalAlignment="Left" Margin="42,48,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="2"/>
-        <TextBox x:Name ="DescriptionText"  AcceptsReturn="True" HorizontalAlignment="Left" Height="210" Margin="25,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="262" Grid.ColumnSpan="3" FontSize="14" Grid.Column="4" TextChanged="DescriptionText_TextChanged" IsEnabled="False"/>
+        <Button Content="Click me" HorizontalAlignment="Left" Margin="54,291,0,0" VerticalAlignment="Top" Click="Button_Click" Width="64" Height="27" Grid.Column="4"/>
+        <TextBlock Text="Time Complexity" HorizontalAlignment="Left" Margin="45,297,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="7"/>
+        <TextBox x:Name ="timeComplexity" TextWrapping="Wrap" Margin="25,318,130,59" RenderTransformOrigin="0.745,5.796" IsEnabled="False" TextChanged="TimeComplexity_TextChanged" Grid.Column="6" FontSize="14" Grid.ColumnSpan="3"/>
+        <TextBlock HorizontalAlignment="Left" Margin="73,48,0,0" TextWrapping="Wrap" Text="Description" VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="7"/>
+        <TextBox x:Name ="CodeInput"  AcceptsReturn="True" HorizontalAlignment="Left" Height="210" Margin="50,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="262" Grid.ColumnSpan="3" FontSize="14" Grid.Column="2"/>
+        <TextBlock Text="Enter C# Code here" HorizontalAlignment="Left" Margin="42,48,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" RenderTransformOrigin="0.532,-0.353" Grid.Column="4"/>
+        <TextBox x:Name ="DescriptionText"  AcceptsReturn="True" HorizontalAlignment="Left" Height="210" Margin="25,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="262" Grid.ColumnSpan="3" FontSize="14" Grid.Column="6" TextChanged="DescriptionText_TextChanged" IsEnabled="False"/>
     </Grid>
 </Window>

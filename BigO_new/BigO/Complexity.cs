@@ -32,12 +32,13 @@ namespace BigO
             if (complexity.Contains("log") && comp.Count(x=> x.Contains("n"))> 1)
                 return TimeType.LinearArithmetic;
 
+            
 
-            if (complexity.Contains("log"))
+           else if (complexity.Contains("log"))
             {
                 return TimeType.Log;
             }
-            if (complexity.Contains("n"))
+           else if (complexity.Contains("n"))
             {
                 return TimeType.Poly;
             }
@@ -65,10 +66,10 @@ namespace BigO
             }
             else
             {
-                MessageBox.Show($"O(1)");
+                complexity = "1";
             }
 
-            return new List<string> { temp + "=" + complexity, $"O({complexity})" };
+            return new List<string> { temp!= "" ?  temp + "=>" + complexity: ""  , $"O({complexity})" };
             
         }
 
