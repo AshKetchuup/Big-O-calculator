@@ -283,7 +283,7 @@ for (int i = 1; i < n; i*=2)
         }
 
         /// <summary>
-        /// Helper Functions
+        /// Helper FunctionsThis 
         /// </summary>
 
 
@@ -546,6 +546,7 @@ for (int i = 1; i < n; i*=2)
         // multiply the complexities and combine the things
         private string Multiply(Complexity a, Complexity b)
         {
+            int[] array = AddPowers(a, b);
             if (a.time == b.time)
             {
 
@@ -554,14 +555,14 @@ for (int i = 1; i < n; i*=2)
                     && a.complexity.Contains("n") && b.complexity.Contains("n")) // check if they have the same variable 
 
                 {
-                    int[] array = AddPowers(a, b);                
+                                 
                     return $"n^{array[0] + array[1]}";
                 }
 
                 //for logarthmic time compleixty
                 if(a.time == TimeType.Log)
                 {
-                    int[] array = AddPowers(a, b);
+                  
                     return $"log(n)^{array[0] + array[1]}";
                 }
                 if(a.time == TimeType.Constant)
@@ -584,7 +585,6 @@ for (int i = 1; i < n; i*=2)
 
                 if(a.time == TimeType.LinearArithmetic && b.time==TimeType.Poly || b.time == TimeType.LinearArithmetic && a.time == TimeType.Poly)
                 {
-                    int[] array = AddPowers(a, b);
                     return $"n^{array[0] + array[1]}log(n)";
                 }
            
@@ -620,24 +620,23 @@ for (int i = 1; i < n; i*=2)
         /// <returns></returns>
         private string Add(Complexity a, Complexity b)
         {
+            int[] array = AddPowers(a, b);
             if (a.time == b.time)
             {
                 if (a.time == TimeType.Poly // if they are polynomial time complexity and if they both contain the same letter variable they depend upon
                       && a.complexity.Contains("n") && b.complexity.Contains("n")) // check if they have the same variable 
                 {
-                    int[] array = AddPowers(a, b);
+                    
                     return array[0] > array[1] ? a.complexity : b.complexity;
                 }
 
               else  if (a.time == TimeType.Log)
                 {                                    
-                    int[] array = AddPowers(a, b);
                     return array[0] > array[1] ? a.complexity : b.complexity;
                 }
 
                 else if (a.time == TimeType.LinearArithmetic)
                 {
-                    int[] array = AddPowers(a, b);
                     return array[0] > array[1] ? a.complexity : b.complexity;
                 }
 
@@ -684,6 +683,7 @@ for (int i = 1; i < n; i*=2)
             return "";
 
         }
+
 
         private int[] AddPowers(Complexity a, Complexity b)
         {
