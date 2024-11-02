@@ -1,3 +1,3 @@
 # NEA
  
-Nea read me test
+Big O calculator
